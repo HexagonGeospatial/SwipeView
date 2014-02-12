@@ -363,19 +363,19 @@ var SwipeView = (function (window, document) {
 			if (!this.initiated) return;
 			
 			var point = hasTouch ? e.changedTouches[0] : e,
-				dist = Math.abs(point.pageX - this.startX);
+				dist = Math.abs(point.pageX - this.startX),
+				movein = !this.options.loop && (this.x > 0 || this.x < this.maxX);
 
 			this.initiated = false;
 			
 			if (!this.moved) return;
 
-			if (!this.options.loop && (this.x > 0 || this.x < this.maxX)) {
-				dist = 0;
+			if (movein) {
 				this.__event('movein');
 			}
 
 			// Check if we exceeded the snap threshold
-			if (dist < this.snapThreshold) {
+			if (dist < this.snapThreshold || movein) {
 				this.slider.style[transitionDuration] = Math.floor(300 * dist / this.snapThreshold) + 'ms';
 				this.__pos(-this.page * this.pageWidth);
 				return;
